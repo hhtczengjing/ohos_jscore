@@ -128,3 +128,19 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# hvigor
+node_modules
+oh_modules
+local.properties
+.idea
+.hvigor
+.preview
+**/build
+**/.test
+.cxx
+.DS_Store
+.appanalyzer
+.clangd
+.clang-tidy
+.clang-format

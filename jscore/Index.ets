@@ -1,0 +1,1 @@
+export { JSCore } from './src/main/ets/JSCore'

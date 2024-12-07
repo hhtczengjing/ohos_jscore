@@ -1,0 +1,12 @@
+{
+  "name": "@devzeng/jscore",
+  "version": "0.1.0",
+  "description": "JavaScriptCore for HarmonyOS",
+  "main": "Index.ets",
+  "author": "zengjing <hhtczengjing@gmail.com>",
+  "license": "MIT",
+  "packageType": "InterfaceHar",
+  "dependencies": {
+    "libjscore.so": "file:./src/main/cpp/types/libjscore"
+  }
+}

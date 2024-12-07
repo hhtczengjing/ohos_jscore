@@ -1,0 +1,5 @@
+{
+  "libjscore.so": {
+    "source": "src/mock/Libjscore.mock.ets"
+  }
+}

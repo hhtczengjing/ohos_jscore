@@ -4,6 +4,8 @@
   "description": "JavaScriptCore for HarmonyOS",
   "main": "Index.ets",
   "author": "zengjing <hhtczengjing@gmail.com>",
+  "homepage": "https://github.com/hhtczengjing/ohos_jscore",
+  "repository": "https://github.com/hhtczengjing/ohos_jscore.git",
   "license": "MIT",
   "packageType": "InterfaceHar",
   "dependencies": {

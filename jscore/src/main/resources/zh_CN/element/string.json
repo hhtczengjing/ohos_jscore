@@ -1,16 +1,8 @@
 {
   "string": [
     {
-      "name": "module_desc",
-      "value": "模块描述"
-    },
-    {
-      "name": "JscoreAbility_desc",
-      "value": "description"
-    },
-    {
-      "name": "JscoreAbility_label",
-      "value": "label"
+      "name": "lib_name",
+      "value": "jscore"
     }
   ]
 }

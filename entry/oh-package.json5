@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@devzeng/jscore": "file:../jscore"
+    "@devzeng/jscore": "^0.1.1"
   }
 }
 

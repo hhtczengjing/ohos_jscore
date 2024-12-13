@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "JavaScriptCore for HarmonyOS",
   "main": "Index.ets",
+  "keywords": ["JavaScriptCore", "jscore", "jsvm"],
   "author": "zengjing <hhtczengjing@gmail.com>",
   "homepage": "https://github.com/hhtczengjing/ohos_jscore",
   "repository": "https://github.com/hhtczengjing/ohos_jscore.git",

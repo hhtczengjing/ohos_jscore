@@ -1,1 +1,1 @@
-export { JSCore } from './src/main/ets/JSCore'
+export { JSCore } from './src/main/ets/JSCore';

@@ -1,5 +1,6 @@
 import { util } from '@kit.ArkTS';
 import { JSCore } from '@devzeng/jscore';
+import { BusinessError } from '@kit.BasicServicesKit';
 
 @Extend(Text)
 function headerStyle() {
@@ -73,15 +74,23 @@ struct Index {
           .btnStyle()
           .onClick(() => {
             this.evaluateScript(this.script1).then((result) => {
+              console.log(`evaluate script1.js success: ${result}`);
               this.result1 = result;
-            });;
+            }).catch((error: BusinessError) => {
+              console.error(`evaluate script1.js failed: ${ JSON.stringify(error) }`);
+              this.result1 = 'evaluate script1.js failed: ' + error.message;
+            });
           })
 
         Button('Run2')
           .btnStyle()
           .onClick(() => {
             this.evaluateScript(this.script2).then((result) => {
+              console.log(`evaluate script2.js success: ${result}`);
               this.result2 = result;
+            }).catch((error: BusinessError) => {
+              console.error(`evaluate script2.js failed: ${ JSON.stringify(error) }`);
+              this.result2 = 'evaluate script2.js failed: ' + error.message;
             });
           })
       }
@@ -120,10 +129,14 @@ struct Index {
   requestData() {
     this.readScriptContent('script1.js').then((value) => {
       this.script1 = value;
+    }).catch((error: BusinessError) => {
+      console.error(`load script1.js failed: ${ JSON.stringify(error) }`);
     });
 
     this.readScriptContent('script2.js').then((value) => {
       this.script2 = value;
+    }).catch((error: BusinessError) => {
+      console.error(`load script2.js failed: ${ JSON.stringify(error) }`);
     });
   }
 

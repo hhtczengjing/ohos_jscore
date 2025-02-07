@@ -51,8 +51,7 @@ static napi_value napi_EvaluateJS(napi_env env, napi_callback_info info) {
 }
 
 EXTERN_C_START
-static napi_value Init(napi_env env, napi_value exports)
-{
+static napi_value Init(napi_env env, napi_value exports) {
     napi_property_descriptor desc[] = {
         {"createJsCore", nullptr, napi_CreateJsCore, nullptr, nullptr, nullptr, napi_default, nullptr},
         {"releaseJsCore", nullptr, napi_ReleaseJsCore, nullptr, nullptr, nullptr, napi_default, nullptr},
@@ -73,7 +72,6 @@ static napi_module demoModule = {
     .reserved = { 0 },
 };
 
-extern "C" __attribute__((constructor)) void RegisterJscoreModule(void)
-{
+extern "C" __attribute__((constructor)) void RegisterJscoreModule(void) {
     napi_module_register(&demoModule);
 }

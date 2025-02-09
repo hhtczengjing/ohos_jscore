@@ -77,7 +77,7 @@ struct Index {
               console.log(`evaluate script1.js success: ${result}`);
               this.result1 = result;
             }).catch((error: BusinessError) => {
-              console.error(`evaluate script1.js failed: ${ JSON.stringify(error) }`);
+              console.error(`evaluate script1.js failed: ${  error.message }`);
               this.result1 = 'evaluate script1.js failed: ' + error.message;
             });
           })
@@ -89,7 +89,7 @@ struct Index {
               console.log(`evaluate script2.js success: ${result}`);
               this.result2 = result;
             }).catch((error: BusinessError) => {
-              console.error(`evaluate script2.js failed: ${ JSON.stringify(error) }`);
+              console.error(`evaluate script2.js failed: ${  error.message }`);
               this.result2 = 'evaluate script2.js failed: ' + error.message;
             });
           })

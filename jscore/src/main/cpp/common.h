@@ -9,6 +9,7 @@
 
 #include "ark_runtime/jsvm_types.h"
 #include <hilog/log.h>
+#include "JSVMException.h"
 
 #define CHECK_RET(theCall)                                                                                             \
     do {                                                                                                               \
@@ -18,6 +19,19 @@
             OH_JSVM_GetLastErrorInfo(env, &info);                                                                      \
             OH_LOG_ERROR(LOG_APP, "jsvm fail file: %{public}s line: %{public}d ret = %{public}d message = %{public}s", \
                          __FILE__, __LINE__, cond, info != nullptr ? info->errorMessage : "");                         \
+            return -1;                                                                                                 \
+        }                                                                                                              \
+    } while (0)
+
+#define CHECK_THROW_RET(theCall)                                                                                       \
+    do {                                                                                                               \
+        JSVM_Status cond = theCall;                                                                                    \
+        if ((cond) != JSVM_OK) {                                                                                       \
+            const JSVM_ExtendedErrorInfo *info;                                                                        \
+            OH_JSVM_GetLastErrorInfo(env, &info);                                                                      \
+            OH_LOG_ERROR(LOG_APP, "jsvm fail file: %{public}s line: %{public}d ret = %{public}d message = %{public}s", \
+                         __FILE__, __LINE__, cond, info != nullptr ? info->errorMessage : "");                         \
+            throw JSVMException(info != nullptr ? info->errorCode : 0, info != nullptr ? info->errorMessage : "");     \
             return -1;                                                                                                 \
         }                                                                                                              \
     } while (0)
@@ -32,10 +46,10 @@
         }                                                                                                              \
     } while (0)
 
-#define CHECK_VAL(theCall)                                                                                                 \
+#define CHECK_VAL(theCall)                                                                                             \
     do {                                                                                                               \
-        bool cond = theCall;                                                                                    \
-        if (!(cond)) {                                                                                       \
+        bool cond = theCall;                                                                                           \
+        if (!(cond)) {                                                                                                 \
             OH_LOG_ERROR(LOG_APP, "jsvm fail file: %{public}s line: %{public}d ret = %{public}d", __FILE__, __LINE__,  \
                          cond);                                                                                        \
             return -1;                                                                                                 \

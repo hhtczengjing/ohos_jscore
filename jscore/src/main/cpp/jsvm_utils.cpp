@@ -246,8 +246,8 @@ int EvaluateJS(uint32_t envId, const char *source, std::string &res) {
         JSVM_Script script;
         JSVM_Value jsSrc;
         CHECK_RET(OH_JSVM_CreateStringUtf8(env, source, JSVM_AUTO_LENGTH, &jsSrc));
-        CHECK_RET(OH_JSVM_CompileScript(env, jsSrc, nullptr, 0, true, nullptr, &script));
-        CHECK_RET(OH_JSVM_RunScript(env, script, &result));
+        CHECK_THROW_RET(OH_JSVM_CompileScript(env, jsSrc, nullptr, 0, true, nullptr, &script));
+        CHECK_THROW_RET(OH_JSVM_RunScript(env, script, &result));
 
         JSVM_ValueType type;
         CHECK_RET(OH_JSVM_Typeof(env, result, &type));

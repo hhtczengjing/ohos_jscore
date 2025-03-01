@@ -1,6 +1,6 @@
 {
   "name": "@devzeng/jscore",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "JavaScriptCore for HarmonyOS",
   "main": "Index.ets",
   "keywords": ["JavaScriptCore", "jscore", "jsvm"],

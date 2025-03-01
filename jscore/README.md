@@ -13,12 +13,16 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 ## 使用
 
 ```javascript
-// 1、创建虚拟机
-const vmId = JSCore.create();
-// 2、执行JS代码获取结果
-const result = JSCore.evaluate(vmId, source);
-// 3、释放虚拟机
-JSCore.release(vmId);
+try {
+    // 1、创建虚拟机
+    const vmId = JSCore.create();
+    // 2、执行JS代码获取结果
+    const result = JSCore.evaluate(vmId, source);
+    // 3、释放虚拟机
+    JSCore.release(vmId);
+} catch (e) {
+    console.error(`evaluate javascript code failed: ${  error.message }`);
+}
 ```
 
 ## 致谢

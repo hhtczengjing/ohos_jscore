@@ -5,5 +5,5 @@
         assertEqual(result, 0);
         onJSResultCallback(result, "abc", "v");
     });
-    a.toUpperCase();
+    b.toUpperCase();
 };

@@ -2,75 +2,7 @@
 #include "napi/native_api.h"
 #include "jsvm_utils.h"
 #include <cstdint>
-
-// assuming env is defined
-#define NAPI_CALL_RET(call, return_value)                                                                              \
-    do {                                                                                                               \
-        napi_status status = (call);                                                                                   \
-        if (status != napi_ok) {                                                                                       \
-            const napi_extended_error_info *error_info = nullptr;                                                      \
-            napi_get_last_error_info(env, &error_info);                                                                \
-            bool is_pending;                                                                                           \
-            napi_is_exception_pending(env, &is_pending);                                                               \
-            if (!is_pending) {                                                                                         \
-                auto message = error_info->error_message ? error_info->error_message : "null";                         \
-                napi_throw_error(env, nullptr, message);                                                               \
-                return return_value;                                                                                   \
-            }                                                                                                          \
-        }                                                                                                              \
-    } while (0)
-
-#define NAPI_CALL(call) NAPI_CALL_RET(call, nullptr)
-
-bool IsNValueUndefined(napi_env env, napi_value value) {
-    napi_valuetype type;
-    if (napi_typeof(env, value, &type) == napi_ok && type == napi_undefined) {
-        return true;
-    }
-    return false;
-}
-
-static std::string NValueToString(napi_env env, napi_value value, bool maybeUndefined = false) {
-    if (maybeUndefined && IsNValueUndefined(env, value)) {
-        return "";
-    }
-
-    size_t size;
-    NAPI_CALL_RET(napi_get_value_string_utf8(env, value, nullptr, 0, &size), "");
-    std::string result(size, '\0');
-    NAPI_CALL_RET(napi_get_value_string_utf8(env, value, (char *) result.data(), size + 1, nullptr), "");
-    return result;
-}
-
-static napi_value StringToNValue(napi_env env, const std::string &value) {
-    napi_value result;
-    napi_create_string_utf8(env, value.data(), value.size(), &result);
-    return result;
-}
-
-static napi_value Int32ToNValue(napi_env env, int32_t value) {
-    napi_value result;
-    napi_create_int32(env, value, &result);
-    return result;
-}
-
-static int32_t NValueToInt32(napi_env env, napi_value value) {
-    int32_t result;
-    napi_get_value_int32(env, value, &result);
-    return result;
-}
-
-static napi_value UInt32ToNValue(napi_env env, uint32_t value) {
-    napi_value result;
-    napi_create_uint32(env, value, &result);
-    return result;
-}
-
-static uint32_t NValueToUInt32(napi_env env, napi_value value) {
-    uint32_t result;
-    napi_get_value_uint32(env, value, &result);
-    return result;
-}
+#include "napi_utils.h"
 
 static napi_value napi_CreateJsCore(napi_env env, napi_callback_info info) {
     uint32_t coreID;

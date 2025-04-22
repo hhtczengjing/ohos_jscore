@@ -242,12 +242,67 @@ int EvaluateJS(uint32_t envId, const char *source, std::string &res) {
         CHECK_RET(OH_JSVM_OpenEnvScope(*g_envMap[envId], &envScope));
         CHECK_RET(OH_JSVM_OpenHandleScope(*g_envMap[envId], &handleScope));
 
-        // 通过script调用测试函数
-        JSVM_Script script;
+        // 将JavaScript源码字符串转换为JSVM_Value
         JSVM_Value jsSrc;
         CHECK_RET(OH_JSVM_CreateStringUtf8(env, source, JSVM_AUTO_LENGTH, &jsSrc));
-        CHECK_THROW_RET(OH_JSVM_CompileScript(env, jsSrc, nullptr, 0, true, nullptr, &script));
-        CHECK_THROW_RET(OH_JSVM_RunScript(env, script, &result));
+        
+        // 编译JavaScript源码
+        JSVM_Script script;
+        JSVM_Status compileScripStatus = OH_JSVM_CompileScript(env, jsSrc, nullptr, 0, true, nullptr, &script);
+        if (compileScripStatus != JSVM_OK) {
+            const JSVM_ExtendedErrorInfo *info;
+            OH_JSVM_GetLastErrorInfo(env, &info);
+            int errorCode = info != nullptr ? info->errorCode : 0;
+            const char *errorMessage = info != nullptr ? info->errorMessage : "Compile Script Error";
+            OH_LOG_ERROR(LOG_APP, "JSVM CompileScript error: %{public}d %{public}s", errorCode, errorMessage);
+            throw JSVMException(errorCode, errorMessage);
+            return -1;
+        }
+        
+        // 执行JavaScript代码
+        JSVM_Status runScripStatus = OH_JSVM_RunScript(env, script, &result);
+        if (runScripStatus != JSVM_OK) {
+            std::string errorMessage;
+            int errorCode = 0;
+            // 检查当前环境中是否有异常挂起
+            bool isExceptionPending = false;
+            if (OH_JSVM_IsExceptionPending(env, &isExceptionPending) == JSVM_OK && isExceptionPending) {
+                OH_LOG_INFO(LOG_APP, "JSVM API OH_JSVM_IsExceptionPending: SUCCESS");
+                // 捕获清除并打印错误
+                JSVM_Value error;
+                if (OH_JSVM_GetAndClearLastException(env, &error) == JSVM_OK) {
+                    // 获取错误的错误信息
+                    JSVM_Value _errorMessage;
+                    if (OH_JSVM_GetNamedProperty(env, error, "message", &_errorMessage) == JSVM_OK) {
+                        char messageStr[256];
+                        size_t messageLen;
+                        if (OH_JSVM_GetValueStringUtf8(env, _errorMessage, messageStr, 256, &messageLen) == JSVM_OK) {
+                            errorMessage = messageStr;
+                        }
+                    }
+                    
+                    // 如果无法获取message属性，尝试获取错误对象的字符串表示
+                    if (errorMessage.empty()) {
+                        char errorStr[256];
+                        size_t errorLen;
+                        if (OH_JSVM_GetValueStringUtf8(env, error, errorStr, 256, &errorLen) == JSVM_OK) {
+                            errorMessage = errorStr;
+                        }
+                    }
+                }
+            }
+            
+            // 如果还是没有获取到错误信息，尝试从ExtendedErrorInfo获取
+            if (errorMessage.empty()) {
+                const JSVM_ExtendedErrorInfo *info;
+                OH_JSVM_GetLastErrorInfo(env, &info);
+                errorMessage = info != nullptr ? info->errorMessage : "Unknown runtime error";
+            }
+            
+            OH_LOG_INFO(LOG_APP, "JSVM RunScript error message: %{public}s, error code: %{public}d", errorMessage.c_str(), errorCode);
+            throw JSVMException(errorCode, errorMessage);
+            return -1;
+        }
 
         JSVM_ValueType type;
         CHECK_RET(OH_JSVM_Typeof(env, result, &type));

@@ -34,7 +34,7 @@ static napi_value napi_EvaluateJS(napi_env env, napi_callback_info info) {
         EvaluateJS(coreEnvId, source.c_str(), res);
         return StringToNValue(env,res);
     } catch (const JSVMException& e) {
-        napi_throw_error(env, nullptr, e.what());
+        napi_throw_error(env, nullptr, e.getErrorMessage().c_str());
     } catch (const std::exception& e) {
         napi_throw_error(env, nullptr, e.what());
     } catch (...) {
